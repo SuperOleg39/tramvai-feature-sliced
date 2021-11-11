@@ -1,0 +1,3 @@
+{
+  "extends": ["@tinkoff/eslint-config/app", "@tinkoff/eslint-config-react"]
+}

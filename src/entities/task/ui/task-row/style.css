@@ -1,0 +1,16 @@
+.TaskRow {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row wrap;
+
+  background: #fff;
+  padding: 20px;
+  transition: 0.25s;
+  border: 1px solid gray;
+  margin-bottom: 20px;
+}
+
+.completed {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
