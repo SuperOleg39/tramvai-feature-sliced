@@ -56,7 +56,7 @@ const PageContent = () => {
   return <TasksList />;
 };
 
-const TasksListPage = () => {
+export const TasksListPage = () => {
   return (
     <div>
       <div>

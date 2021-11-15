@@ -23,6 +23,13 @@
               "@entities": "./src/entities",
               "@features": "./src/features",
               "@pages": "./src/pages"
+            },
+            "experiments": {
+              "fileSystemPages": {
+                "enable": true,
+                "externalPagesDir": "routes",
+                "staticPagesDir": "__DISABLED__"
+              }
             }
           }
         },
