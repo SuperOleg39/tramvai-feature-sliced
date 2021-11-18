@@ -1,9 +1,9 @@
-import { TaskDetailsLoadingStore, useTask } from '@entities/task/model';
+import { getTaskByIdQuery, useTask } from '@entities/task/model';
 import { TaskCard } from '@entities/task/ui';
 import { ToggleTask } from '@features/toggle-task/ui';
 import { Link } from '@tinkoff/router';
 import { useDi } from '@tramvai/react';
-import { useStore } from '@tramvai/state';
+import { useQuery } from '@tramvai/react-query';
 import { PAGE_SERVICE_TOKEN } from '@tramvai/tokens-router';
 import React from 'react';
 import { loadTaskToCurrentRoute } from '../model';
@@ -12,7 +12,7 @@ export const TaskDetailsPage = () => {
   const pageService = useDi(PAGE_SERVICE_TOKEN);
   const taskId = Number(pageService.getCurrentRoute().params.taskId);
   const task = useTask(taskId);
-  const isLoading = useStore(TaskDetailsLoadingStore);
+  const { isLoading } = useQuery(getTaskByIdQuery, { taskId });
 
   if (!task && !isLoading) {
     // @todo: 404 status on server!

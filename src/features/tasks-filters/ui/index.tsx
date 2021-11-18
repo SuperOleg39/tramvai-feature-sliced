@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { useStore, useConsumerContext } from '@tramvai/state';
+import { useConsumerContext } from '@tramvai/state';
 import type { QueryConfig } from '@entities/task/model';
-import { TasksListLoadingStore, setQueryConfig } from '@entities/task/model';
+import { getTasksListQuery } from '@entities/task/model';
+import { setQueryConfig } from '@entities/task/model';
+import { useQuery } from '@tramvai/react-query';
 
 export type Filter = {
   id: number;
@@ -68,10 +70,10 @@ const View = ({ loading, onFilterClick }: Props) => {
 };
 
 export const TasksFilters = () => {
-  const loading = useStore(TasksListLoadingStore);
+  const { isLoading } = useQuery(getTasksListQuery, {});
   const context = useConsumerContext();
   const onFilterClick = (params: QueryConfig) =>
     context.dispatch(setQueryConfig(params));
 
-  return <View loading={loading} onFilterClick={onFilterClick} />;
+  return <View loading={isLoading} onFilterClick={onFilterClick} />;
 };

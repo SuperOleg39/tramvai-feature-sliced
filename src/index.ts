@@ -5,6 +5,7 @@ import { RenderModule } from '@tramvai/module-render';
 import { ServerModule, PROXY_CONFIG_TOKEN } from '@tramvai/module-server';
 import { ErrorInterceptorModule } from '@tramvai/module-error-interceptor';
 import { SeoModule } from '@tramvai/module-seo';
+import { ReactQueryModule } from '@tramvai/module-react-query';
 import {
   RENDER_SLOTS,
   ResourceType,
@@ -22,6 +23,7 @@ createApp({
     SeoModule,
     ServerModule,
     ErrorInterceptorModule,
+    ReactQueryModule,
 
     TasksListPageModule,
     TaskDetailsPageModule,

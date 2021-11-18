@@ -1,4 +1,4 @@
-import { getTaskByIdAction } from '@entities/task/model';
+import { getTaskByIdQuery } from '@entities/task/model';
 import { createAction } from '@tramvai/core';
 import { PAGE_SERVICE_TOKEN } from '@tramvai/tokens-router';
 
@@ -9,7 +9,9 @@ export const loadTaskToCurrentRoute = createAction({
     if (!taskId) {
       return;
     }
-    await context.executeAction(getTaskByIdAction, { taskId: Number(taskId) });
+    await context.executeAction(
+      getTaskByIdQuery.prefetchAction({ taskId: Number(taskId) })
+    );
   },
   deps: {
     pageService: PAGE_SERVICE_TOKEN,

@@ -1,5 +1,5 @@
 import { createReducer, createEvent, useStore } from '@tramvai/state';
-import { createAction } from '@tramvai/core';
+import { createQuery } from '@tramvai/react-query';
 import { createSelector } from 'reselect';
 import type {
   GetTaskByIdParams,
@@ -7,6 +7,7 @@ import type {
   Task,
 } from '@shared/api/tasks';
 import { TASKS_API_SERVICE } from '@shared/api/tasks';
+import { STORE_TOKEN } from '@tramvai/tokens-common';
 
 export interface QueryConfig {
   completed?: boolean;
@@ -16,32 +17,34 @@ export interface QueryConfig {
 export const toggleTask = createEvent<number>('toggle task');
 export const setQueryConfig = createEvent<QueryConfig>('set query config');
 
-const getTasksListStart = createEvent<void>('get tasks list start');
 const getTasksListSuccess = createEvent<Task[]>('get tasks list success');
-const getTaskByIdStart = createEvent<void>('get task by id start');
 const getTaskByIdSuccess = createEvent<Task | undefined>(
   'get task by id success'
 );
 
-export const getTasksListAction = createAction({
-  name: 'get tasks list action',
-  fn: async (context, params: GetTasksListParams, { tasksApiService }) => {
-    context.dispatch(getTasksListStart());
+export const getTasksListQuery = createQuery({
+  key: 'getTasksList',
+  fn: async (params: GetTasksListParams, { store, tasksApiService }) => {
     const { payload } = await tasksApiService.getTasksList(params);
-    context.dispatch(getTasksListSuccess(payload));
+    store.dispatch(getTasksListSuccess(payload));
+    return payload;
   },
   deps: {
+    store: STORE_TOKEN,
     tasksApiService: TASKS_API_SERVICE,
   },
 });
-export const getTaskByIdAction = createAction({
-  name: 'get task by id action',
-  fn: async (context, params: GetTaskByIdParams, { tasksApiService }) => {
-    context.dispatch(getTaskByIdStart());
+
+export const getTaskByIdQuery = createQuery({
+  key: (params: GetTaskByIdParams) =>
+    ['getTaskById', params.taskId].filter(Boolean),
+  fn: async (params: GetTaskByIdParams, { store, tasksApiService }) => {
     const { payload } = await tasksApiService.getTaskById(params);
-    context.dispatch(getTaskByIdSuccess(payload));
+    store.dispatch(getTaskByIdSuccess(payload));
+    return payload;
   },
   deps: {
+    store: STORE_TOKEN,
     tasksApiService: TASKS_API_SERVICE,
   },
 });
@@ -88,17 +91,6 @@ export const QueryConfigStore = createReducer(
   'queryConfig',
   queryConfigInitialState
 ).on(setQueryConfig, (_, payload) => payload);
-
-export const TasksListLoadingStore = createReducer('tasksListLoading', false)
-  .on(getTasksListStart, () => true)
-  .on(getTasksListSuccess, () => false);
-
-export const TaskDetailsLoadingStore = createReducer(
-  'tasksDetailsLoading',
-  false
-)
-  .on(getTaskByIdStart, () => true)
-  .on(getTaskByIdSuccess, () => false);
 
 export const tasksListSelector = createSelector(
   (state: { tasks: Record<number, Task> }) => state.tasks,
