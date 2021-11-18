@@ -3,8 +3,8 @@
   "private": true,
   "scripts": {
     "start": "tramvai start example-app",
-    "start:prod": "ASSETS_PREFIX=${SANDBOX_URL}public/ tramvai start-prod example-app",
-    "build": "ASSETS_PREFIX=${SANDBOX_URL}public/ tramvai build example-app",
+    "start:prod": "tramvai start-prod example-app",
+    "build": "tramvai build example-app",
     "lint": "eslint --ext .ts,.tsx --ignore-path .gitignore ."
   },
   "devDependencies": {
@@ -28,11 +28,13 @@
     "@tramvai/module-common": "1.28.2",
     "@tramvai/module-error-interceptor": "1.28.2",
     "@tramvai/module-http-client": "1.28.2",
+    "@tramvai/module-react-query": "1.28.2",
     "@tramvai/module-render": "1.28.2",
     "@tramvai/module-router": "1.28.2",
     "@tramvai/module-seo": "1.28.2",
     "@tramvai/module-server": "1.28.2",
     "@tramvai/react": "1.28.2",
+    "@tramvai/react-query": "1.28.2",
     "@tramvai/state": "1.28.2",
     "@tramvai/tokens-render": "1.28.2",
     "@tramvai/tokens-router": "1.28.2",

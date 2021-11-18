@@ -3,15 +3,15 @@ import type { Task } from '@shared/api/tasks';
 import { TaskRow } from '@entities/task/ui/task-row';
 import { TasksFilters } from '@features/tasks-filters/ui';
 import { ToggleTask } from '@features/toggle-task/ui';
-import { useSelector, useStore } from '@tramvai/state';
+import { useSelector } from '@tramvai/state';
 import {
-  getTasksListAction,
+  getTasksListQuery,
   QueryConfigStore,
   tasksFilteredSelector,
   tasksListEmptySelector,
-  TasksListLoadingStore,
   TasksStore,
 } from '@entities/task/model';
+import { useQuery } from '@tramvai/react-query';
 
 const ListItemView: React.FC<{ task: Task }> = ({ task }) => {
   return (
@@ -41,7 +41,7 @@ const TasksList = () => {
 };
 
 const PageContent = () => {
-  const isLoading = useStore(TasksListLoadingStore);
+  const { isLoading } = useQuery(getTasksListQuery, {});
   const isEmpty = useSelector(
     [TasksStore, QueryConfigStore] as const,
     tasksListEmptySelector
@@ -76,6 +76,6 @@ export const TasksListPage = () => {
   );
 };
 
-TasksListPage.actions = [getTasksListAction];
+TasksListPage.actions = [getTasksListQuery.prefetchAction()];
 
 export default TasksListPage;
