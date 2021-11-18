@@ -1,5 +1,11 @@
-import { createReducer, createEvent, useStore } from '@tramvai/state';
-import { createQuery } from '@tramvai/react-query';
+/* eslint-disable react-hooks/rules-of-hooks */
+import {
+  createReducer,
+  createEvent,
+  useStore,
+  useSelector,
+} from '@tramvai/state';
+import { createQuery, useQuery } from '@tramvai/react-query';
 import { createSelector } from 'reselect';
 import type {
   GetTaskByIdParams,
@@ -7,6 +13,7 @@ import type {
   Task,
 } from '@shared/api/tasks';
 import { TASKS_API_SERVICE } from '@shared/api/tasks';
+import type { CONTEXT_TOKEN } from '@tramvai/tokens-common';
 import { STORE_TOKEN } from '@tramvai/tokens-common';
 
 export interface QueryConfig {
@@ -117,3 +124,56 @@ export const tasksListEmptySelector = createSelector(
 export const useTask = (taskId: number): Task | undefined => {
   return useStore(TasksStore)[taskId];
 };
+
+export class TaskEntityRepository {
+  readonly TasksStore = TasksStore;
+  readonly QueryConfigStore = QueryConfigStore;
+
+  readonly getTasksListQuery = getTasksListQuery;
+  readonly getTaskByIdQuery = getTaskByIdQuery;
+
+  readonly setQueryConfigEvent = setQueryConfig;
+  readonly toggleTaskEvent = toggleTask;
+
+  readonly tasksListEmptySelector = tasksListEmptySelector;
+  readonly tasksFilteredSelector = tasksFilteredSelector;
+
+  readonly useTask = useTask;
+
+  private context: typeof CONTEXT_TOKEN;
+
+  constructor({ context }: { context: typeof CONTEXT_TOKEN }) {
+    this.context = context;
+  }
+
+  setQueryConfig(params: QueryConfig) {
+    return this.context.dispatch(this.setQueryConfigEvent(params));
+  }
+
+  toggleTask(taskId: number) {
+    return this.context.dispatch(this.toggleTaskEvent(taskId));
+  }
+
+  useGetTasksListQuery(params: GetTasksListParams = {}) {
+    return useQuery(this.getTasksListQuery, params);
+  }
+
+  useGetTaskByIdQuery(params: GetTaskByIdParams) {
+    return useQuery(this.getTaskByIdQuery, params);
+  }
+
+  useTasksListEmpty() {
+    return useSelector(
+      [this.TasksStore, this.QueryConfigStore] as const,
+      tasksListEmptySelector
+    );
+  }
+
+  useTasksFiltered() {
+    return useSelector(
+      [this.TasksStore, this.QueryConfigStore] as const,
+      tasksFilteredSelector
+    );
+  }
+}
+/* eslint-enable react-hooks/rules-of-hooks */

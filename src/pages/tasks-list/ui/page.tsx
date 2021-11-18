@@ -3,15 +3,9 @@ import type { Task } from '@shared/api/tasks';
 import { TaskRow } from '@entities/task/ui/task-row';
 import { TasksFilters } from '@features/tasks-filters/ui';
 import { ToggleTask } from '@features/toggle-task/ui';
-import { useSelector } from '@tramvai/state';
-import {
-  getTasksListQuery,
-  QueryConfigStore,
-  tasksFilteredSelector,
-  tasksListEmptySelector,
-  TasksStore,
-} from '@entities/task/model';
-import { useQuery } from '@tramvai/react-query';
+import { getTasksListQuery } from '@entities/task/model';
+import { useDi } from '@tramvai/react';
+import { TASK_ENTITY_REPOSITORY } from '@entities/task';
 
 const ListItemView: React.FC<{ task: Task }> = ({ task }) => {
   return (
@@ -26,10 +20,8 @@ const ListItemView: React.FC<{ task: Task }> = ({ task }) => {
 };
 
 const TasksList = () => {
-  const tasksFiltered = useSelector(
-    [TasksStore, QueryConfigStore] as const,
-    tasksFilteredSelector
-  );
+  const taskEntityRepository = useDi(TASK_ENTITY_REPOSITORY);
+  const tasksFiltered = taskEntityRepository.useTasksFiltered();
 
   return (
     <>
@@ -41,11 +33,10 @@ const TasksList = () => {
 };
 
 const PageContent = () => {
-  const { isLoading } = useQuery(getTasksListQuery, {});
-  const isEmpty = useSelector(
-    [TasksStore, QueryConfigStore] as const,
-    tasksListEmptySelector
-  );
+  const taskEntityRepository = useDi(TASK_ENTITY_REPOSITORY);
+
+  const { isLoading } = taskEntityRepository.useGetTasksListQuery();
+  const isEmpty = taskEntityRepository.useTasksListEmpty();
 
   if (isLoading) {
     return <div>Loading...</div>;

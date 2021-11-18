@@ -8,8 +8,8 @@
     "lint": "eslint --ext .ts,.tsx --ignore-path .gitignore ."
   },
   "devDependencies": {
-    "@tinkoff/eslint-config": "^1.13.0",
-    "@tinkoff/eslint-config-react": "^1.13.0",
+    "@tinkoff/eslint-config": "^1.14.0",
+    "@tinkoff/eslint-config-react": "^1.14.0",
     "@tinkoff/eslint-plugin-tramvai": "^0.5.12",
     "@tinkoff/prettier-config": "^1.13.0",
     "@tramvai/cli": "1.28.2",

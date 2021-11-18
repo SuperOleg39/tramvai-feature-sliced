@@ -1,7 +1,7 @@
 import React from 'react';
-import { useConsumerContext } from '@tramvai/state';
-import { useTask, toggleTask } from '@entities/task/model';
 import { getTaskStatus } from '@entities/task/lib';
+import { useDi } from '@tramvai/react';
+import { TASK_ENTITY_REPOSITORY } from '@entities/task';
 
 export interface ToggleTaskProps {
   taskId: number;
@@ -9,8 +9,8 @@ export interface ToggleTaskProps {
 }
 
 export const ToggleTask = ({ taskId, withStatus = true }: ToggleTaskProps) => {
-  const task = useTask(taskId);
-  const context = useConsumerContext();
+  const taskEntityRepository = useDi(TASK_ENTITY_REPOSITORY);
+  const task = taskEntityRepository.useTask(taskId);
 
   if (!task) {
     return null;
@@ -23,7 +23,7 @@ export const ToggleTask = ({ taskId, withStatus = true }: ToggleTaskProps) => {
       <label>
         <input
           type="checkbox"
-          onChange={() => context.dispatch(toggleTask(taskId))}
+          onChange={() => taskEntityRepository.toggleTask(taskId)}
           checked={task.completed}
         />
         {withStatus && status}
